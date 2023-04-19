@@ -1,5 +1,6 @@
 import className from "classnames";
 import Image from "next/image";
+import { media } from "@wix/api-client";
 
 type IVerticalFeatureRowProps = {
   title: string;
@@ -33,10 +34,8 @@ const VerticalFeatureRow = (props: IVerticalFeatureRowProps) => {
       <div className="w-full sm:w-1/2 p-6">
         <Image
           src={
-            props.image.startsWith("https://static.wixstatic.com")
-              ? `https://static.wixstatic.com/media/${
-                  props.image.split("/")[3]
-                }`
+            props.image.startsWith("wix:image")
+              ? media.getImageUrl(props.image).url
               : props.image
           }
           alt={props.imageAlt}

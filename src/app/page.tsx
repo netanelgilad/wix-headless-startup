@@ -1,30 +1,25 @@
 import { Base } from "@/components/landing-page/templates/Base";
 import "./global.css";
+import { OAuthStrategy, createClient } from "@wix/api-client";
+import { dataItems } from "@wix/data-items";
+import { DataItem } from "@wix/data-items/build/cjs/src/data-v2-data-item.universal";
+
+const wixClient = createClient({
+  auth: OAuthStrategy({ clientId: process.env.WIX_HEADLESS_CLIENT_ID! }),
+  modules: {
+    dataItems,
+  },
+});
 
 export default async function Home() {
-  return (
-    <Base
-      homePage={{
-        title: "Home Page",
-        description: "This is the home page",
-        callToAction: "Click here to get started",
-        featuresTitle: "Features",
-        featuresDescription: "This is the features description",
-        blogFeatureTitle: "Blog",
-        blogFeatureDescription: "This is the blog feature description",
-        blogFeatureImage: "https://via.placeholder.com/150",
-        pricingPlansFeatureTitle: "Pricing Plans",
-        pricingPlansFeatureDescription:
-          "This is the pricing plans feature description",
-        pricingPlansFeatureImage: "https://via.placeholder.com/150",
-        bookingsFeatureTitle: "Bookings",
-        bookingsFeatureDescription: "This is the bookings feature description",
-        bookingsFeatureImage: "https://via.placeholder.com/150",
-        usersFeatureTitle: "Users",
-        usersFeatureDescription: "This is the users feature description",
-        usersFeatureImage: "https://via.placeholder.com/150",
-        bottomCtaDescription: "This is the bottom CTA description",
-      }}
-    />
-  );
+  const tokens = await wixClient.auth.generateVisitorTokens();
+  wixClient.auth.setTokens(tokens);
+
+  const { dataItems } = await wixClient.dataItems.queryDataItems({
+    dataCollectionId: "HomePage",
+    query: {},
+  });
+  const homePage = (dataItems as DataItem[])[0].data as any;
+
+  return <Base homePage={homePage} />;
 }

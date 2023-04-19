@@ -14,6 +14,7 @@
     "@types/react-dom": "18.0.11",
     "@wix/api-client": "^1.1.55",
     "@wix/blog": "^1.0.169",
+    "@wix/data-items": "^1.0.0",
     "autoprefixer": "10.4.14",
     "classnames": "^2.3.2",
     "eslint": "8.38.0",
